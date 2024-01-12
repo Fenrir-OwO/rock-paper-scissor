@@ -4,12 +4,12 @@ function playRound(playerSelection, computerSelection) {
 
     console.log("player chose------->",playerSelection);
     return result;
-  };
+};
    
-  let playerSelection = prompt("Rock, Paper or Scissors?").toLowerCase();
+let playerSelection = prompt("Rock, Paper or Scissors?").toLowerCase();
 
-  let computerSelection = getComputerChoice();
-  console.log(playRound(playerSelection, computerSelection));
+let computerSelection = getComputerChoice();
+console.log(playRound(playerSelection, computerSelection));
 
 
 
@@ -30,11 +30,11 @@ function game(result){
     playerWin = 0;
     computerWin = 0;
 
-    if (playRound() === "tie"){
+    if (result === "tie"){
         console.log("Tie, play next round");
     }
     else {
-        if (playRound() === "player wins"){
+        if (result === "player wins"){
             playerWin += 1;
         }
         else {
