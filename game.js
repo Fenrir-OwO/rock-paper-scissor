@@ -1,5 +1,5 @@
-let playerScore = 4;
-let computerScore = 4;
+let playerScore = 0;
+let computerScore = 0;
 
 function getComputerChoice(){
     let choices = ["rock", "paper", "scissors"];
