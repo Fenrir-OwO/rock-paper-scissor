@@ -1,69 +1,119 @@
+// Get all necessary DOM nodes
+const images = Array.from(document.querySelectorAll('.card-image'));
+const message = document.querySelector('.message');
+const scorePlayer = document.querySelector('.player-score');
+const scoreComputer = document.querySelector('.computer-score');
+const selectionPlayer = document.querySelector('.player');
+const selectionComputer = document.querySelector('.computer');
+
 let playerScore = 0;
 let computerScore = 0;
 
-function getComputerChoice(){
-    let choices = ["rock", "paper", "scissors"];
-    let randomizedInt = Math.floor((Math.random() * choices.length));
-    
+// Start Game when user clicks on an image
+images.forEach((image) =>
+  image.addEventListener('click', () => {
+    if (playerScore >= 5 || computerScore >= 5) {
+      return;
+    }
+    game(image.dataset.image);
+  })
+);
 
-    let randomizedChoice = randomizedInt === 0 ? "rock" : (randomizedInt === 1 ? "paper" : "scissors"); //if-else
-    return randomizedChoice;
-    
+/* Game Logic */
+
+function getComputerSelection() {
+  let computerNumber = random(3);
+  let computerGuess = '';
+
+  switch (computerNumber) {
+    case 1:
+      computerGuess = 'Rock';
+      break;
+    case 2:
+      computerGuess = 'Paper';
+      break;
+    case 3:
+      computerGuess = 'Scissors';
+      break;
+    default:
+      break;
+  }
+
+  return computerGuess;
 }
 
 function playRound(playerSelection, computerSelection) {
-    let result = playerSelection === computerSelection ? "tie" : (playerSelection === "rock" && computerSelection === "paper" ? "computer wins" : (playerSelection === "paper" && computerSelection === "scissors" ? "computer wins" : (playerSelection === "scissors" && computerSelection === "rock" ? "computer wins" : "player wins")))
+  let log = '';
 
-    if (result === "tie"){
-        console.log("TIE! Round is cancelled!")
+  if (playerSelection === 'Rock') {
+    if (computerSelection === 'Paper') {
+      log = 'You Lose! Paper beats Rock';
+    } else if (computerSelection === 'Scissors') {
+      log = 'You Win! Rock beats Scissors';
+    } else {
+      log = "It's a tie";
     }
-    else if (result === "computer wins"){
-        computerScore += 1;
-        console.log("Computer Wins The Round!")
+  } else if (playerSelection === 'Paper') {
+    if (computerSelection === 'Scissors') {
+      log = 'You Lose! Scissors beats Paper';
+    } else if (computerSelection === 'Rock') {
+      log = 'You Win! Paper beats Rock';
+    } else {
+      log = "It's a tie";
     }
-    else if(result === "player wins"){
-        playerScore += 1;
-        console.log("Player Wins The Round!")
+  } else if (playerSelection === 'Scissors') {
+    if (computerSelection === 'Rock') {
+      log = 'You Lose! Rock beats Scissors';
+    } else if (computerSelection === 'Paper') {
+      log = 'You Win! Scissors beats Paper';
+    } else {
+      log = "It's a tie";
     }
+  }
+
+  return log;
 }
 
-function game(){
-    let playerSelection = prompt("Rock, Paper or Scissors").toLowerCase()
+function createParagWithText(text) {
+  const p = document.createElement('p');
+  p.textContent = text;
 
-    if (!["rock","paper","scissors"].includes(playerSelection)){
-        console.log("Invalid input!");
-        errorInput();
-    }
-
-    let computerSelection = getComputerChoice();
-    playRound(playerSelection,computerSelection);
+  return p;
 }
 
-function reCall(){
-    while (playerScore < 5 && computerScore < 5){
-        game();
-        if (playerScore === 5){
-            console.log("Congratulation! You Win!");
-            throw waste();
-        }
-        else if(computerScore === 5){
-            console.log("You Lost! Better Luck Next Time.")
-            throw waste();
-        }
-            
-    }
+function game(playerSelect) {
+  let playerSelection = capitalize(playerSelect);
+  let computerSelection = getComputerSelection();
+
+  let roundResult = playRound(playerSelection, computerSelection);
+
+  if (roundResult.search('You Win!') > -1) {
+    playerScore++;
+  } else if (roundResult.search('You Lose!') > -1) {
+    computerScore++;
+  }
+
+  scorePlayer.textContent = playerScore;
+  scoreComputer.textContent = computerScore;
+  message.textContent = roundResult;
+  selectionPlayer.appendChild(createParagWithText(playerSelection));
+  selectionComputer.appendChild(createParagWithText(computerSelection));
+
+  if (playerScore >= 5 && computerScore < 5) {
+    message.textContent = 'Game Over. You Win!';
+  } else if (playerScore < 5 && computerScore >= 5) {
+    message.textContent = 'Game Over. You Lose!';
+  }
 }
 
-
-reCall();
-
-
-function errorInput(){
-    reCall();
+/* Helper Functions */
+function random(number) {
+  return Math.floor(Math.random() * number + 1);
 }
 
-function waste(){
-    console.log("There were error rounds");
+function capitalize(string) {
+  return (
+    string.toLowerCase().charAt(0).toUpperCase() + string.toLowerCase().slice(1)
+  );
 }
-
-//the Math.random() function randomly chooses a number greater than 0, but lesser than 1. We are multiplying that number with the lenght of the choices we have, in this case, 3. This gives us a random number greater than 0 but lesser than 3. We then use the Math.floor() to discard the digits after the decimal points and only take the value, so now it returns 0,1 or 2 randomly. Finally the +1 was just to make the 0 go away and get a 3 randomly in that place. Final outcome 1,2 or 3.
+/* ************************ */
