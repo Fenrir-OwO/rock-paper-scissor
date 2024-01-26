@@ -1,14 +1,45 @@
-let playerScore = 4;
-let computerScore = 4;
+// Get all necessary DOM nodes
+const images = Array.from(document.querySelectorAll('.card-image'));
+const message = document.querySelector('.message');
+const scorePlayer = document.querySelector('.player-score');
+const scoreComputer = document.querySelector('.computer-score');
+const selectionPlayer = document.querySelector('.player');
+const selectionComputer = document.querySelector('.computer');
 
-function getComputerChoice(){
-    let choices = ["rock", "paper", "scissors"];
-    let randomizedInt = Math.floor((Math.random() * choices.length));
-    
+let playerScore = 0;
+let computerScore = 0;
 
-    let randomizedChoice = randomizedInt === 0 ? "rock" : (randomizedInt === 1 ? "paper" : "scissors"); //if-else
-    return randomizedChoice;
-    
+// Start Game when user clicks on an image
+images.forEach((image) =>
+  image.addEventListener('click', () => {
+    if (playerScore >= 5 || computerScore >= 5) {
+      return;
+    }
+    game(image.dataset.image);
+  })
+);
+
+/* Game Logic */
+
+function getComputerSelection() {
+  let computerNumber = random(3);
+  let computerGuess = '';
+
+  switch (computerNumber) {
+    case 1:
+      computerGuess = 'Rock';
+      break;
+    case 2:
+      computerGuess = 'Paper';
+      break;
+    case 3:
+      computerGuess = 'Scissors';
+      break;
+    default:
+      break;
+  }
+
+  return computerGuess;
 }
 
 function playRound(playerSelection, computerSelection) {
